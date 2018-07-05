@@ -1,0 +1,293 @@
+News
+****
+
+Release 7.4
+===========
+
+   • Tiny refactoring.  Go 1.9 is minimal required version.
+   • Dependant cryptographic libraries are updated.
+
+Release 7.3
+===========
+
+   • Fixed seldom possible segmentation fault on the server during
+     rehandshake.
+   • Dependant cryptographic libraries are updated.
+
+Release 7.2
+===========
+
+   • Fixed fatal bug in nonce generation code, appeared in 7.1 version.
+     Everyone *have to* update.
+
+Release 7.1
+===========
+
+   • Fixed bug in client’s identity generation and detection code:
+     simultaneous clients may be incorrectly identified, preventing
+     their connection establishing and allowing DPI to detect GoVPN
+     packets.
+
+Release 7.0
+===========
+
+   • (X)Salsa20 is replaced with ChaCha20.  Theoretically it should be
+     faster and more secure.  Previous versions are not compatible with
+     it!
+   • Ability to use TUN-interfaces under GNU/Linux.  FreeBSD has already
+     supported them without any modifications.
+
+Release 6.0
+===========
+
+   • Argon2d is replaced with Balloon hashing.  Found Argon2 libraries
+     written on pure Go have various problems.  Moreover Argon2i should
+     be used instead, but it has some possible cryptographic defects
+     (http://eprint.iacr.org/2016/027).  So it is replaced with much
+     more simpler (and seems even cryptographically better) Balloon
+     hashing (https://crypto.stanford.edu/balloon/).
+
+Release 5.10
+============
+
+   • ‘-version’ option added, printing program version.
+
+Release 5.9
+===========
+
+   • Client reconnects in the loop when connection is lost.  Optionally
+     you can disable that behaviour: client will exit immediately, as it
+     previously did.
+
+Release 5.8
+===========
+
+   • Optional ability to use syslog for logging, with RFC 5424
+     (https://tools.ietf.org/html/rfc5424)-like structured records.
+   • XTEA algorithm is not used anymore for nonce obfuscation, but
+     BLAKE2b-MAC instead.  Encryptionless mode now really does not
+     depend on encryption functions.
+
+Release 5.7
+===========
+
+   • TAP interface name and remote peer’s address are passed to up- and
+     down- scripts through environment variables.
+   • Update Argon2 library to use version 1.3 of the algorithm.
+
+Release 5.6
+===========
+
+   • Added up/down example script for replacing default route (thanks to
+     Zhuoyun Wei).
+   • Fixed documentation bug: ‘.info’ was not installing.
+
+Release 5.5
+===========
+
+   • Ability to work on 32-bit platforms.  _sync/atomic_ library has
+     some specific issues that caused panics on previous versions.
+
+Release 5.4
+===========
+
+   • Added optional time synchronization requirement.  It will add
+     timestamps in handshake PRP authentication, disallowing to repeat
+     captured packet and get reply from the server, making it visible to
+     DPI.
+
+Release 5.3
+===========
+
+   • Fixed minor bug with ‘newclient.sh’ that caught "Passphrase:"
+     prompt and inserted it into example YAML output.  Just replaced
+     stdout output to stderr for that prompt.
+
+Release 5.2
+===========
+
+   • Ability to read passphrases directly from the terminal (user’s
+     input) without using of keyfiles.  ‘storekey.sh’ utility removed.
+
+Release 5.1
+===========
+
+   • Server is configured using YAML (http://yaml.org/) file.  It is
+     very convenient to have comments and templates, comparing to JSON.
+   • Incompatible with previous versions replacement of _HSalsa20_ with
+     _BLAKE2b_ in handshake code.
+
+Release 5.0
+===========
+
+   • New optional encryptionless mode of operation.  Technically no
+     encryption functions are applied for outgoing packets, so you can
+     not be forced to reveal your encryption keys or sued for encryption
+     usage.
+   • MTUs are configured on per-user basis.
+   • Simplified payload padding scheme, saving one byte of data.
+   • Ability to specify TAP interface name explicitly without any
+     up-scripts for convenience.
+   • ‘govpn-verifier’ utility also can use EGD.
+
+Release 4.2
+===========
+
+   • Fixed non-critical bug when server may fail if up-script is not
+     executed successfully.
+
+Release 4.1
+===========
+
+   • Argon2d (https://password-hashing.net/#argon2) is used instead of
+     PBKDF2 for password verifier hashing.
+   • Client’s identity is stored inside the verifier, so it simplifies
+     server-side configuration and the code.
+
+Release 4.0
+===========
+
+   • Handshake messages can be noised: their messages lengths are
+     hidden.  Now they are indistinguishable from transport messages.
+   • Parallelized clients processing on the server side.
+   • Much higher overall performance.
+   • Single JSON file server configuration.
+
+Release 3.5
+===========
+
+   • Ability to use TCP network transport.  Server can listen on both
+     UDP and TCP sockets.
+   • Ability to use HTTP proxies (through CONNECT method) for accessing
+     the server.  Server can also emulate HTTP proxy behaviour.
+   • Updated Poly1305 library with ARM-related bugfixes.
+   • Go 1.5+ version is highly recommended because of performance
+     reasons.
+
+Release 3.4
+===========
+
+   • Ability to use external EGD-compatible PRNGs.  Now you are able to
+     use GoVPN even on systems with the bad ‘/dev/random’, providing
+     higher quality entropy from external sources.
+   • Removed ‘-noncediff’ option.  It is replaced with in-memory storage
+     of seen nonces, thus eliminating possible replay attacks at all
+     without performance degradation related to inbound packets
+     reordering.
+
+Release 3.3
+===========
+
+   • Compatibility with an old GNU Make 3.x.  Previously only BSD Make
+     and GNU Make 4.x were supported.
+   • ‘/dev/urandom’ is used for correct client identity generation under
+     GNU/Linux systems.  Previously ‘/dev/random’ can produce less than
+     required 128-bits of random.
+
+Release 3.2
+===========
+
+   • Deterministic building: dependent libraries source code commits are
+     fixed in our makefiles.
+   • No Internet connection is needed for building the source code: all
+     required libraries are included in release tarballs.
+   • FreeBSD Make compatibility.  GNU Make is not necessary anymore.
+
+Release 3.1
+===========
+
+   • Diffie-Hellman public keys are encoded with Elligator algorithm
+     when sending over the wire, making them indistinguishable from the
+     random strings, preventing detection of successful decryption try
+     when guessing passwords (that are used to create DSA public keys).
+     But this will consume twice entropy for DH key generation in
+     average.
+
+Release 3.0
+===========
+
+   • EKE protocol is replaced by Augmented-EKE and static symmetric
+     (both sides have it) pre-shared key replaced with server-side
+     verifier.  This requires, 64 more bytes in handshake traffic,
+     Ed25519 dependency with corresponding sign/verify computations,
+     PBKDF2 dependency and its usage on the client side during
+     handshake.
+
+     A-EKE with PBKDF2-based verifiers is resistant to dictionary
+     attacks, can use human memorable passphrases instead of static keys
+     and server-side verifiers can not be used for authentication
+     (compromised server does not leak client’s authentication
+     keys/passphrases).
+
+   • Changed transport message structure: added payload packet’s length.
+     This will increase transport overhead for two bytes, but heartbeat
+     packets became smaller
+
+   • Ability to hide underlying packets lengths by appending noise, junk
+     data during transmission.  Each packet can be fill up-ed to its
+     maximal MTU size.
+
+   • Ability to hide underlying packets appearance rate, by generating
+     Constant Packet Rate traffic.  This includes noise generation too.
+   • Per-peer ‘-timeout’, ‘-noncediff’, ‘-noise’ and ‘-cpr’
+     configuration options for server.
+
+Release 2.4
+===========
+
+   • Added ability to optionally run built-in HTTP-server responding
+     with JSON of all known connected peers information.  Real-time
+     client’s statistics.
+   • Documentation is explicitly licenced under GNU FDL 1.3+.
+
+Release 2.3
+===========
+
+   • Handshake packets became indistinguishable from the random.  Now
+     all GoVPN’s traffic is the noise for men in the middle.
+
+   • Handshake messages are smaller (16% traffic reduce).
+
+   • Adversary now can not create malicious fake handshake packets that
+     will force server to generate private DH key, preventing entropy
+     consuming and resource heavy computations.
+
+Release 2.2
+===========
+
+   • Fixed several possible channel deadlocks.
+
+Release 2.1
+===========
+
+   • Fixed Linux-related building.
+
+Release 2.0
+===========
+
+   • Added clients identification.
+   • Simultaneous several clients support by server.
+   • Per-client up/down scripts.
+
+Release 1.5
+===========
+
+   • Nonce obfuscation/encryption.
+
+Release 1.4
+===========
+
+   • Performance optimizations.
+
+Release 1.3
+===========
+
+   • Heartbeat feature.
+   • Rehandshake feature.
+   • up- and down- optional scripts.
+
+Release 1.1
+===========
+
+   • FreeBSD support.
+

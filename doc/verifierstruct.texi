@@ -1,0 +1,23 @@
+@node Verifier structure
+@section Verifier structure
+
+Verifier is a derivative of the password. It is resistant to
+dictionary attacks and can not be used for authentication (only
+its verifying).
+
+@verbatim
+SOURCE = Balloon(PASSWORD, SALT=PeerId, sCost, tCost, pJobs)
+PUB, PRIV = Ed25519.Generate(SOURCE)
+@end verbatim
+
+Balloon hashing uses BLAKE2b-256 hash. Space cost (sCost), time cost
+(tCost) and number of parallel jobs (pJobs) are specific to Balloon
+implementation.
+
+Verifier is serialized representation of public data above:
+@verbatim
+$balloon$s=s,t=t,p=p$Base64(SALT)$Base64(PUB)
+@end verbatim
+
+Server stores and knows only verifier. Client can compute the whole
+keypair every time he makes handshake.

@@ -1,0 +1,112 @@
+@node Modes of operation
+@unnumbered Modes of operation
+
+See also this page @ref{Режимы работы, on russian}.
+
+There are three modes of operation and two modes of data confidentiality
+protection.
+
+Three modes of operation provide various trade-off between
+resource-consumption and effectiveness.
+
+@table @asis
+
+@item Default mode.
+
+Data packets are encrypted and authenticated and sent immediately. This
+is the most effective mode with minimal overhead and delays.
+
+@verbatim
+         +-----------+   +-----+         +---------+    +------+
+         |  DATA     |   |DATA |         |  DATA   |    | DATA |
+         +-----------+   +-----+         +---------+    +------+
+
+---------------------------------------------------------------------------------------> t
+@end verbatim
+
+@item @ref{Noise} mode.
+
+This mode hides packet's lengths. It consumes more traffic as a rule.
+
+@verbatim
+ +------const------+        +------const------+    +------const------+
+/                   \      /                   \  /                   \
+
++------+------------+      +---------+---------+  +-------------+-----+
+| DATA | NOISE      |      | DATA    | NOISE   |  | DATA        |NOISE|
++------+------------+      +---------+---------+  +-------------+-----+
+
+---------------------------------------------------------------------------------------> t
+@end verbatim
+
+@item @ref{CPR} mode.
+
+This mode also hides packets timestamps. It can increase delays and
+insert dummy noised packets.
+
+@verbatim
+ +------const------+             +------const------+             +------const------+
+/                   \           /                   \           /                   \
+
++------+------------+           +---------+---------+           +-------------------+
+| DATA | NOISE      |<--const-->| DATA    | NOISE   |<--const-->|       NOISE       |
++------+------------+           +---------+---------+           +-------------------+
+
+---------------------------------------------------------------------------------------> t
+@end verbatim
+
+@end table
+
+Confidentiality protection modes are also trade-off between
+effectiveness and resource-consumption.
+
+@table @asis
+
+@item @ref{Transport, Default} mode.
+
+Encryption and authentication is done using well-known algorithms. This
+is very effective mode. It generates packets undistinguishable from the
+noise.
+
+@verbatim
++---------------------------------------------------------+
+|                       PACKET                            |
+|                                                         |
+|  +-----+ +---------------------------+   +-------+      |
+|  | TAG |/         CIPHERTEXT          \ /  NONCE  \     |
+|  +-----+|-----------------------------||-----------|    |
+|         |                             ||           |    |
++---------------------------------------------------------+
+          |                             ||           |
+          |-----------------------------||-----------|
+          |          ENCRYPTION         ||    MAC    |
+          +------------+---+------------++-----------+
+          |    DATA    |PAD|    ZEROS   ||  SERIAL   |
+          +------------+---+------------++-----------+
+@end verbatim
+
+@item @ref{Encless, Encryptionless} mode.
+
+This mode does not use any encryption function. Chaffing-and-Winnowing
+encoding is used over AONT (all-or-nothing) package instead. This mode
+consumes much more traffic and resources. It also generated
+undistinguishable from the noise packets.
+
+@verbatim
++----------------------------------------------------+
+|                  PACKET                            |
+|                                                    |
+|     +---------------------------+  +---------+     |
+|    /         CIPHERTEXT          \/   NONCE   \    |
+|    |-----------------------------||-----------|    |
+|    |                             ||           |    |
++----------------------------------------------------+
+     |                             ||           |
+     |--------+--------------------||-----------|
+     |Chaffing|        AONT        ||    MAC    |
+     +--------+---+---+------------++-----------+
+     |    DATA    |PAD|    ZEROS   ||  SERIAL   |
+     +------------+---+------------++-----------+
+@end verbatim
+
+@end table

@@ -1,0 +1,35 @@
+@startuml
+hide footbox
+participant Client
+participant Server
+
+Client -> Server : R, enc(H(DSAPub), R, El(CDHPub))
+note right
+R=rand(64bit)
+CDHPriv=rand(256bit)
+end note
+
+Server -> Client : enc(H(DSAPub), R+1, El(SDHPub))\nenc(K, R, RS+SS)
+note right
+SDHPriv=rand(256bit)
+K=H(DH(SDHPriv, CDHPub))
+RS=rand(64bit)
+SS=rand(256bit)
+end note
+
+Client -> Server : enc(K, R+1, RS+RC+SC+Sign(DSAPriv, K))
+note right
+K=H(DH(CDHPriv, SDHPub))
+RC=rand(64bit)
+SC=rand(256bit)
+end note
+
+Server -> Client : enc(K, R+2, RC)
+note right
+compare(RS)
+compare(RC)
+Verify(DSAPub, Sign(DSAPriv, K), K)
+MasterKey=SS XOR SC
+end note
+
+@enduml

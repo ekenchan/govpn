@@ -1,0 +1,14 @@
+@node Русский
+@unnumbered Информация на русском
+
+@menu
+* О демоне::
+* Часто задаваемые вопросы: ЧАВО.
+* Новости::
+* Режимы работы::
+@end menu
+
+@include about.ru.texi
+@include faq.ru.texi
+@include news.ru.texi
+@include modes.ru.texi

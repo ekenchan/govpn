@@ -1,0 +1,6 @@
+@node Syslog
+@subsection Syslog
+
+You can enable logging to syslog instead of default stdout using
+@option{-syslog} option. All informational messages during the work
+will be sent with @emph{INFO} level.

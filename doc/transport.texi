@@ -1,0 +1,51 @@
+@node Transport
+@section Transport protocol
+
+@verbatim
+     NONCE = 64bit(ZEROS) || 64bit(MAC(MAC_KEY, SERIAL))
+   PAYLOAD = DATA || PAD [|| ZEROS]
+CIPHERTEXT = ENCRYPT(KEY, NONCE, PAYLOAD)
+       TAG = AUTH(AUTH_KEY, CIPHERTEXT || NONCE)
+   MESSAGE = TAG || CIPHERTEXT || NONCE
+@end verbatim
+
+@code{SERIAL} is message's serial number. Odds are reserved for
+client (to server) messages, evens for server (to client) messages.
+
+@code{MAC} is BLAKE2b-MAC used to obfuscate @code{SERIAL}. MAC's key
+@code{MAC_KEY} is the first 256-bit of ChaCha20's output with established
+common key and zero nonce (message nonces start from 1).
+
+@verbatim
+MAC_KEY = 256bit(ENCRYPT(KEY, 0))
+@end verbatim
+
+@code{ENCRYPT} is ChaCha20 stream cipher, with established session
+@code{KEY} and obfuscated @code{SERIAL} used as a nonce. 512 bit of
+ChaCha20's output is ignored and only remaining is XORed with ther data,
+encrypting it.
+
+@code{DATA} is padded using ISO/IEC 7816-4 format (@code{PAD} (0x80
+byte) with optional @code{ZEROS} following), to fill up packet to
+conceal payload packet length.
+
+@code{AUTH} is Poly1305 authentication function. First 256 bits of
+ChaCha20's output are used as a one-time key for @code{AUTH}.
+
+@verbatim
+AUTH_KEY = 256bit(ENCRYPT(KEY, NONCE))
+@end verbatim
+
+To prevent replay attacks we must remember received @code{SERIAL}s and
+drop when receiving duplicate ones.
+
+In @ref{Encless, encryptionless mode} this scheme is slightly different:
+
+@verbatim
+  NONCE = MAC(MAC_KEY, SERIAL)
+ENCODED = ENCLESS(DATA || PAD || ZEROS)
+ PACKET = ENCODED || NONCE
+@end verbatim
+
+@code{ENCLESS} is AONT and chaffing function. There is no need in
+explicit separate authentication.

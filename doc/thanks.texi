@@ -1,0 +1,11 @@
+@node Thanks
+@unnumbered Thanks
+
+Thanks for contributions and suggestions to:
+
+@itemize
+@item Watson Ladd for suggestion of @url{http://elligator.cr.yp.to/, Elligator} encoding.
+@item Zhuoyun Wei for @url{https://aur.archlinux.org/packages/govpn/, AUR} port
+maintaining and his documentation related fixes.
+@item Bruno Clermont for finding serious bugs and code refactoring.
+@end itemize

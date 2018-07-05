@@ -1,0 +1,10 @@
+@node Contacts
+@unnumbered Contacts
+
+Please send questions regarding the use of GoVPN, bug reports and patches to
+@url{https://lists.cypherpunks.ru/pipermail/govpn-devel/, govpn-devel}
+mailing list. Announcements also go to this mailing list.
+
+Official website is @url{http://www.govpn.info/}, also available as
+@url{https://geti2p.net/en/, I2P} service
+@url{http://zy2qxyziqzledqqb5vcq5unfxnn2csv6revteliybd7qxb64dpxq.b32.i2p/}.

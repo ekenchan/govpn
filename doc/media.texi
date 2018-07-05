@@ -1,0 +1,11 @@
+@node Media
+@unnumbered In the media
+
+@itemize
+@item @url{http://www.stargrave.org/GoVPN.html, GoVPN: secure censorship resistant VPN daemon history and implementation decisions}
+@item @url{http://habrahabr.ru/company/ivi/blog/256365/, Реализуем безопасный VPN-протокол} (on russian)
+@item @url{http://habrahabr.ru/company/ivi/blog/257431/, Реализуем ещё более безопасный VPN-протокол} (on russian)
+@item @url{http://www.linuxspace.org/archives/9449, Установка и настройка безопасного VPN-демона GoVPN 3.2} (on russian)
+@item @url{http://www.linuxspace.org/archives/14123, Установка и настройка безопасного VPN-демона GoVPN 5.10} (on russian)
+@item @url{https://www.youtube.com/watch?v=Civ3CKW71pA, Презентация GoVPN на CryptoInstallFest 3} (on russian)
+@end itemize
